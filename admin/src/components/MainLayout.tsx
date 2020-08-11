@@ -5,12 +5,6 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -26,9 +20,6 @@ import ContestList from "./contest/ContestList";
 import ContestInfo from "./contest/ContestInfo";
 import ColorList from "./color/ColorList";
 import SeriesList from "./series/SeriesList";
-import { User } from "../model/user";
-import { Organizer } from "../model/organizer";
-import WelcomeView from "./WelcomeView";
 import OrganizerList from "./organizer/OrganizerList";
 import LocationList from "./location/LocationList";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -77,7 +68,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  isLoggedIn: boolean;
   title: string;
 }
 
@@ -137,25 +127,21 @@ const MainLayout = (props: Props) => {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {props.isLoggedIn && (
-          <>
-            <Typography variant="h6" noWrap style={{ marginBottom: "1rem" }}>
-              {props.title}
-            </Typography>
-            <Divider />
-            <Paper style={{ marginTop: "1rem" }}>
-              <Switch>
-                <Route path="(/|/contests)" exact component={ContestList} />
-                <Route path="/contests/:contestId" component={ContestInfo} />
-                <Route path="/colors" exact component={ColorList} />
-                <Route path="/series" exact component={SeriesList} />
-                <Route path="/organizers" exact component={OrganizerList} />
-                <Route path="/locations" exact component={LocationList} />
-                <Route path="/" component={NotFound} />
-              </Switch>
-            </Paper>
-          </>
-        )}
+        <Typography variant="h6" noWrap style={{ marginBottom: "1rem" }}>
+          {props.title}
+        </Typography>
+        <Divider />
+        <Paper style={{ marginTop: "1rem" }}>
+          <Switch>
+            <Route path="(/|/contests)" exact component={ContestList} />
+            <Route path="/contests/:contestId" component={ContestInfo} />
+            <Route path="/colors" exact component={ColorList} />
+            <Route path="/series" exact component={SeriesList} />
+            <Route path="/organizers" exact component={OrganizerList} />
+            <Route path="/locations" exact component={LocationList} />
+            <Route path="/" component={NotFound} />
+          </Switch>
+        </Paper>
       </main>
     </div>
   );
@@ -164,7 +150,6 @@ const MainLayout = (props: Props) => {
 export function mapStateToProps(state: StoreState, props: any): Props {
   return {
     title: state.title,
-    isLoggedIn: state.loggedInUser != undefined,
   };
 }
 

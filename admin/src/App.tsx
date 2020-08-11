@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
@@ -13,7 +13,6 @@ import { StoreState } from "./model/storeState";
 import { connect } from "react-redux";
 import { clearErrorMessage, logout } from "./actions/actions";
 import { selectOrganizer } from "./actions/asyncActions";
-import { login } from "./actions/asyncActions";
 import ContestList from "./components/contest/ContestList";
 import ContestInfo from "./components/contest/ContestInfo";
 import ColorList from "./components/color/ColorList";
@@ -28,6 +27,7 @@ import MainLayout from "./components/MainLayout";
 import Alert from "@material-ui/lab/Alert";
 
 export interface Props {
+  isLoggedIn: boolean;
   errorMessage?: string;
   clearErrorMessage?: () => void;
 }
@@ -52,31 +52,37 @@ const App = (props: Props) => {
     <Router>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <MuiThemeProvider theme={theme}>
-          <MainLayout />
-          <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            style={{ bottom: 15 }}
-            open={props.errorMessage != undefined}
-            autoHideDuration={6000}
-            onClose={handleClose}
-            action={[
-              <IconButton
-                key="close"
-                aria-label="Close"
-                color="inherit"
-                onClick={handleClose}
+          {props.isLoggedIn ? (
+            <>
+              <MainLayout />
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                style={{ bottom: 15 }}
+                open={props.errorMessage != undefined}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                action={[
+                  <IconButton
+                    key="close"
+                    aria-label="Close"
+                    color="inherit"
+                    onClick={handleClose}
+                  >
+                    <Close />
+                  </IconButton>,
+                ]}
               >
-                <Close />
-              </IconButton>,
-            ]}
-          >
-            <Alert onClose={handleClose} severity="error">
-              {props.errorMessage}
-            </Alert>
-          </Snackbar>
+                <Alert onClose={handleClose} severity="error">
+                  {props.errorMessage}
+                </Alert>
+              </Snackbar>
+            </>
+          ) : (
+            <WelcomeView />
+          )}
         </MuiThemeProvider>
       </MuiPickersUtilsProvider>
     </Router>
@@ -86,6 +92,7 @@ const App = (props: Props) => {
 export function mapStateToProps(state: StoreState, props: any): Props {
   return {
     errorMessage: state.errorMessage,
+    isLoggedIn: state.loggedInUser != undefined,
   };
 }
 

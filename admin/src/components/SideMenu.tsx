@@ -22,9 +22,7 @@ import { connect } from "react-redux";
 import { StoreState } from "../model/storeState";
 import Chip from "@material-ui/core/Chip";
 
-export interface Props {
-  loggedInUser?: User;
-}
+export interface Props {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,42 +34,37 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function SideMenu({ loggedInUser }: Props) {
-  const classes = useStyles();
+const items = [
+  {
+    name: "Contests",
+    icon: <TableChart />,
+    path: "/contests",
+  },
+  {
+    name: "Colors",
+    icon: <Palette />,
+    path: "/colors",
+    divider: true,
+  },
+  {
+    name: "Locations",
+    icon: <ExploreIcon />,
+    path: "/locations",
+  },
+  {
+    name: "Organizers",
+    icon: <PeopleIcon />,
+    path: "/organizers",
+  },
+  {
+    name: "Series",
+    icon: <LibraryBooksIcon />,
+    path: "/series",
+  },
+];
 
-  const items = [
-    {
-      name: "Contests",
-      icon: <TableChart />,
-      path: "/contests",
-      condition: loggedInUser != undefined,
-    },
-    {
-      name: "Colors",
-      icon: <Palette />,
-      path: "/colors",
-      condition: loggedInUser != undefined,
-      divider: true,
-    },
-    {
-      name: "Locations",
-      icon: <ExploreIcon />,
-      path: "/locations",
-      condition: loggedInUser != undefined,
-    },
-    {
-      name: "Organizers",
-      icon: <PeopleIcon />,
-      path: "/organizers",
-      condition: loggedInUser != undefined,
-    },
-    {
-      name: "Series",
-      icon: <LibraryBooksIcon />,
-      path: "/series",
-      condition: loggedInUser != undefined,
-    },
-  ];
+function SideMenu(props: Props) {
+  const classes = useStyles();
 
   return (
     <>
@@ -94,24 +87,22 @@ function SideMenu({ loggedInUser }: Props) {
       </div>
       <Divider />
       <List>
-        {items
-          .filter(({ condition }) => condition ?? true)
-          .map(({ name, icon, path, divider }) => {
-            return (
-              <React.Fragment key={path}>
-                <ListItem
-                  button
-                  component={Link}
-                  to={path}
-                  className={classes.menuItem}
-                >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={name} />
-                </ListItem>
-                {divider && <Divider />}
-              </React.Fragment>
-            );
-          })}
+        {items.map(({ name, icon, path, divider }) => {
+          return (
+            <React.Fragment key={path}>
+              <ListItem
+                button
+                component={Link}
+                to={path}
+                className={classes.menuItem}
+              >
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={name} />
+              </ListItem>
+              {divider && <Divider />}
+            </React.Fragment>
+          );
+        })}
       </List>
 
       <div style={{ margin: "auto 10px 20px 10px", textAlign: "center" }}>
@@ -135,9 +126,7 @@ function SideMenu({ loggedInUser }: Props) {
 }
 
 export function mapStateToProps(state: StoreState, props: any): Props {
-  return {
-    loggedInUser: state.loggedInUser,
-  };
+  return {};
 }
 
 const mapDispatchToProps = {};

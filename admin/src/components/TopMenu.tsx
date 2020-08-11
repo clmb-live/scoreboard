@@ -39,7 +39,6 @@ export interface Props {
   organizers?: Organizer[];
   selectedOrganizer?: Organizer;
 
-  login?: (code: string) => void;
   logout?: () => void;
   selectOrganizer?: (organizerId: number) => void;
 }
@@ -60,46 +59,10 @@ const TopMenu = (props: Props & RouteComponentProps & StyledComponentProps) => {
   const classes = useStyles();
   const theme = useTheme();
 
-  useEffect(() => {
-    let query = qs.parse(props.location.hash, {
-      ignoreQueryPrefix: true,
-    });
-    let credentials = query.access_token;
-
-    if (credentials) {
-      props.login!(credentials);
-      props.history.push("/contests");
-    } else {
-      credentials = localStorage.getItem("credentials");
-
-      if (credentials != null) {
-        props.login!(credentials);
-      }
-    }
-  }, []);
-
   const onOrganizerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = parseInt(e.target.value);
     let organizer = props.organizers!.find((o) => o.id == id)!;
     props.selectOrganizer?.(organizer.id!);
-  };
-
-  const getUrl = (command: string) => {
-    let url = "https://clmb.auth.eu-west-1.amazoncognito.com/";
-    url += command;
-    // Response type token or code
-    url +=
-      "?response_type=token&client_id=55s3rmvp8t26lmi0898n9d1lfn&redirect_uri=";
-    url += encodeURIComponent(window.location.origin);
-    return url;
-  };
-
-  const login = () => {
-    window.location.href = getUrl("login");
-  };
-
-  const signup = () => {
-    window.location.href = getUrl("signup");
   };
 
   const logout = () => {
@@ -139,16 +102,6 @@ const TopMenu = (props: Props & RouteComponentProps & StyledComponentProps) => {
 
       <div className={classes.authControl}>
         {loggingIn && <CircularProgress size={20} style={{ color: "white" }} />}
-        {!loggingIn && !loggedInUser && (
-          <div>
-            <Button color="inherit" onClick={login}>
-              Login
-            </Button>
-            <Button color="inherit" onClick={signup}>
-              Sign up
-            </Button>
-          </div>
-        )}
         {loggedInUser && (
           <div>
             {loggedInUser.name}
